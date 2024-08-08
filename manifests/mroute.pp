@@ -29,7 +29,7 @@
 #
 # [*route_up_template*]
 #   Template to use to manage route up setup. Default is defined according to
-#   $::osfamily
+#   $facts['os']['family']
 #
 # [*route_down_template*]
 #   Template to use to manage route down script. Used only on Debian family.
@@ -72,7 +72,7 @@ define network::mroute (
   }
 
   $real_route_up_template = $route_up_template ? {
-    undef   => $::osfamily ? {
+    undef   => $facts['os']['family'] ? {
       'RedHat' => 'network/mroute-RedHat.erb',
       'Debian' => 'network/mroute_up-Debian.erb',
       'SuSE'   => 'network/mroute-SuSE.erb',
@@ -80,21 +80,21 @@ define network::mroute (
     default =>  $route_up_template,
   }
   $real_route_down_template = $route_down_template ? {
-    undef   => $::osfamily ? {
+    undef   => $facts['os']['family'] ? {
       'Debian' => 'network/mroute_down-Debian.erb',
       default  => undef,
     },
     default =>  $route_down_template,
   }
 
-  if $::osfamily == 'SuSE' {
+  if $facts['os']['family'] == 'SuSE' {
     $networks = keys($routes)
     network::mroute::validate_gw { $networks:
       routes => $routes,
     }
   }
 
-  case $::osfamily {
+  case $facts['os']['family'] {
     'RedHat': {
       file { "route-${name}":
         ensure  => $ensure,
