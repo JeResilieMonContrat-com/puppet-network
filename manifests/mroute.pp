@@ -62,7 +62,7 @@ define network::mroute (
   $route_down_template = undef,
 ) {
   # Validate our arrays
-  validate_hash($routes)
+  assert_type(Hash, $routes)
 
   include ::network
 

@@ -32,10 +32,10 @@ define network::rule (
   $ensure    = 'present'
 ) {
   # Validate our arrays
-  validate_array($iprule)
+  assert_type(Array, $iprule)
 
   if $family {
-    validate_array($family)
+    assert_type(Array, $family)
   }
 
   include ::network

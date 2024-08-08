@@ -77,8 +77,6 @@ define network::conf (
 
   $ensure       = present ) {
 
-  validate_re($ensure, ['present','absent'], 'Valid values are: present, absent. WARNING: If set to absent the conf file is removed.')
-
   include ::network
 
   $manage_path    = pick($path, "${::network::config_dir_path}/${name}")
