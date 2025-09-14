@@ -571,7 +571,7 @@ define network::interface (
   }
 
   # Redhat and Suse specific
-  if $facts['os']['name'] == 'SLES' and versioncmp($facts['os']['name']release, 12) >= 0 {
+  if $facts['os']['name'] == 'SLES' and versioncmp($facts['os']['release']['major'], 12) >= 0 {
     $bootproto_false = 'static'
   } else {
     $bootproto_false = 'none'
@@ -647,7 +647,7 @@ define network::interface (
 
     'Debian': {
       if $vlan_raw_device {
-        if versioncmp('9.0', $facts['os']['name']release) >= 0
+        if versioncmp('9.0', $facts['os']['release']['full']) >= 0
         and !defined(Package['vlan']) {
           package { 'vlan':
             ensure => 'present',
@@ -767,7 +767,7 @@ define network::interface (
     }
 
     'Solaris': {
-      if $facts['os']['name']release == '5.11' {
+      if $facts['os']['release']['full'] == '5.11' {
         if ! defined(Service['svc:/network/physical:nwam']) {
           service { 'svc:/network/physical:nwam':
             ensure => stopped,
@@ -780,7 +780,7 @@ define network::interface (
           }
         }
       }
-      case $facts['os']['name']majrelease {
+      case $facts['os']['release']['major'] {
         '11','5': {
           if $enable_dhcp {
             $create_ip_command = "ipadm create-addr -T dhcp ${title}/dhcp"
